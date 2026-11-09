@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Request{% endblock %}
+{% block content %}
+<p><a href="/">All requests</a></p>
+<h1 class="status-{{ row.status }}">{{ row.requested_model or "Unknown model" }} · {{ row.status }}</h1>
+
+<h2>Metadata</h2>
+<div class="table-wrap">
+  <table class="meta">
+    <tbody>
+      {% for name, value in metadata %}
+      <tr>
+        <th>{{ name }}</th>
+        <td class="mono">{{ "—" if value is none else value }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2>Messages</h2>
+{% if messages is not none %}
+  {% for message in messages %}
+  <div class="message">
+    <div class="role">{{ message.role }}</div>
+    {% if message.content is not none %}<pre>{{ message.content }}</pre>{% endif %}
+    {% if message.extra %}<pre class="extra">{{ message.extra }}</pre>{% endif %}
+  </div>
+  {% endfor %}
+{% elif raw_request %}
+  <pre>{{ raw_request }}</pre>
+{% else %}
+  <p class="muted">Not stored.</p>
+{% endif %}
+
+<h2>Output</h2>
+{% if output_text %}<pre>{{ output_text }}</pre>{% else %}<p class="muted">None stored.</p>{% endif %}
+
+<h2>Tool calls</h2>
+{% if tool_calls %}<pre>{{ tool_calls }}</pre>{% else %}<p class="muted">None stored.</p>{% endif %}
+
+<h2>Error</h2>
+{% if error %}<pre>{{ error }}</pre>{% else %}<p class="muted">None.</p>{% endif %}
+{% endblock %}

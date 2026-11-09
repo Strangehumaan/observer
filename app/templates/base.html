@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %} · OpenRouter proxy</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #fafaf9; --surface: #ffffff; --text: #1c1917; --muted: #6b6560;
+      --border: #e4e0db; --accent: #1d5fbf;
+      --ok: #1b7a43; --warn: #9a6200; --bad: #b3261e;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #161514; --surface: #201f1d; --text: #ece9e4; --muted: #a39d95;
+        --border: #38352f; --accent: #7fb0f5;
+        --ok: #62c98d; --warn: #e0ad55; --bad: #f28b82;
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+           font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    main { max-width: 1200px; margin: 0 auto; padding: 24px 16px 48px; }
+    h1 { font-size: 20px; margin: 0 0 16px; }
+    h2 { font-size: 15px; margin: 28px 0 8px; }
+    a { color: var(--accent); }
+    .muted { color: var(--muted); }
+    .mono, pre, code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+    .stat dt { color: var(--muted); font-size: 12px; }
+    .stat dd { margin: 2px 0 0; font-size: 20px; font-variant-numeric: tabular-nums; }
+    .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin-bottom: 14px; }
+    .filters label { display: grid; gap: 3px; font-size: 12px; color: var(--muted); }
+    input, select, button { font: inherit; padding: 5px 8px; border: 1px solid var(--border);
+                            border-radius: 6px; background: var(--surface); color: var(--text); }
+    button { cursor: pointer; }
+    .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { padding: 7px 12px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    tr:last-child td { border-bottom: 0; }
+    th { color: var(--muted); font-size: 12px; font-weight: 500; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .status-success { color: var(--ok); }
+    .status-client_disconnected { color: var(--warn); }
+    .status-upstream_error, .status-proxy_error { color: var(--bad); }
+    .truncate { display: inline-block; max-width: 160px; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom; }
+    .pager { display: flex; gap: 14px; align-items: center; margin-top: 14px; }
+    .meta th { width: 190px; }
+    .meta td { white-space: normal; word-break: break-word; }
+    pre { margin: 0; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border);
+          border-radius: 8px; white-space: pre-wrap; word-break: break-word; }
+    .message { margin-bottom: 10px; }
+    .role { font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+    .extra { margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <main>{% block content %}{% endblock %}</main>
+</body>
+</html>

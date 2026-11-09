@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Requests{% endblock %}
+{% block content %}
+<h1>OpenRouter requests</h1>
+
+<dl class="stats">
+  <div class="stat"><dt>Requests</dt><dd>{{ summary.request_count | count }}</dd></div>
+  <div class="stat"><dt>Total cost</dt><dd>{{ summary.total_cost | cost }}</dd></div>
+  <div class="stat"><dt>Total tokens</dt><dd>{{ summary.total_tokens | count }}</dd></div>
+  <div class="stat"><dt>Errors</dt><dd>{{ summary.error_count | count }}</dd></div>
+  <div class="stat"><dt>Average latency</dt><dd>{{ summary.average_latency_ms | ms }}</dd></div>
+</dl>
+
+<form class="filters" method="get" action="/">
+  <label>Model
+    <select name="model">
+      <option value="">All models</option>
+      {% for model in models %}
+      <option value="{{ model }}" {% if model == filters.model %}selected{% endif %}>{{ model }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Status
+    <select name="status">
+      <option value="">All statuses</option>
+      {% for status in statuses %}
+      <option value="{{ status }}" {% if status == filters.status %}selected{% endif %}>{{ status }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Session ID
+    <input type="text" name="session_id" value="{{ filters.session_id or '' }}">
+  </label>
+  <button type="submit">Filter</button>
+  <a href="/">Clear</a>
+</form>
+
+{% if rows %}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Time (UTC)</th><th>Model</th><th>Status</th>
+        <th class="num">Tokens</th><th class="num">Cost</th>
+        <th class="num">Latency</th><th class="num">TTFT</th><th>Session</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td><a class="mono" href="/requests/{{ row.id }}">{{ row.created_at[:19] | replace("T", " ") }}</a></td>
+        <td>{{ row.requested_model or "—" }}</td>
+        <td class="status-{{ row.status }}">{{ row.status }}</td>
+        <td class="num">{{ row.total_tokens | count }}</td>
+        <td class="num">{{ row.cost | cost }}</td>
+        <td class="num">{{ row.latency_ms | ms }}</td>
+        <td class="num">{{ row.ttft_ms | ms }}</td>
+        <td><span class="truncate mono" title="{{ row.session_id or '' }}">{{ row.session_id or "—" }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="pager">
+  {% if previous_url %}<a href="{{ previous_url }}">Newer</a>{% endif %}
+  <span class="muted">Page {{ page }} of {{ page_count }}</span>
+  {% if next_url %}<a href="{{ next_url }}">Older</a>{% endif %}
+</div>
+{% else %}
+<p class="muted">No requests found. Point your OpenAI client at <code>http://127.0.0.1:8000/v1</code> and send one.</p>
+{% endif %}
+{% endblock %}
